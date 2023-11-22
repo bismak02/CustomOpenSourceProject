@@ -1,0 +1,3 @@
+[submodule "theHarvester"]
+	path = theHarvester
+	url = git@github.com:laramies/theHarvester.git
