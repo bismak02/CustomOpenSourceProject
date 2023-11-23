@@ -21,3 +21,4 @@ shodan==1.30.1
 slowapi==0.1.8
 uvicorn==0.24.0.post1
 uvloop==0.19.0; platform_system != "Windows"
+pysimplegui==4.60.5
