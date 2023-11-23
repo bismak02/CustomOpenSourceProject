@@ -9,7 +9,7 @@ import subprocess
 
 def execute_python_file(file_path):
     try:
-        completed_process = subprocess.run(['python3', file_path], capture_output=True, text=True)
+        completed_process = subprocess.run(['python3', file_path, get_user_options()], capture_output=True, text=True)
         if completed_process.returncode == 0:
             print("Execution successful.")
             print("Output:")
@@ -20,6 +20,10 @@ def execute_python_file(file_path):
             print(completed_process.stderr)
     except FileNotFoundError:
         print(f"Error: The file '{file_path}' does not exist.")
+
+def get_user_options():
+    options = "-d google.com"
+    return options
 
 layout = [[sg.Text("Hello from PySimpleGUI")], [sg.Button("OK")], [sg.Button("Run Test")]]
 
