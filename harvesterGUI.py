@@ -25,7 +25,7 @@ def execute_python_file():
     except FileNotFoundError:
         print(f"Error: The file theHarvester/theHarvester.py does not exist.")
 
-# This function will get user input.
+# This function will get user input as data source number 1
 def get_user_options():
     options = "-d google.com"
     return options
