@@ -7,6 +7,7 @@ import os
 import subprocess
 
 # This function will run a shell command and will likely not need to be touched much.
+# Using theHarvester terminal application also serves as another data source, as the data will be pulled from the application output.
 def execute_python_file(): 
     try: # For error catching
         # Following line tells python to run a shell and execute the command. Command may look like such: `python3 theHarvester/theHarvester.py "USER OPTIONS HERE"`
@@ -35,15 +36,16 @@ if __name__ == "__main__":
     # "layout" defines how the gui will appear. Just add modules to the array.
     # sg.Text will display text
     # sg.Button will add a button that can be pressed
-    layout = [[sg.Text("Hello from PySimpleGUI")], [sg.Button("Run Test")]]
+    layout = [  [sg.Text("This is a simple GUI for theHarvester terminal application.")], 
+                [sg.Button("Begin")]   ]
 
     # Create the window
-    window = sg.Window("Demo", layout)
+    window = sg.Window("theHarvesterGUI", layout, resizable=True)
 
     # Create an event loop to tell if a button is pressed. If more buttons are added, this can be modified for them.
     while True:
         event, values = window.read()
-        if event == "Run Test":
+        if event == "Begin":
             execute_python_file() 
 
         # End program if user closes window
