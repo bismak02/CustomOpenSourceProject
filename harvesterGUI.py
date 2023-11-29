@@ -1,55 +1,65 @@
-#!/usr/bin/env python3
-# harvesterGUI.py
-
-# This GUI uses PySimpleGUI as the library for the GUI. Find documentation here: https://www.pysimplegui.org/en/latest/
+# Import necessary libraries
 import PySimpleGUI as sg
-import os
 import subprocess
 
-# This function will run a shell command and will likely not need to be touched much.
-# Using theHarvester terminal application also serves as another data source, as the data will be pulled from the application output.
-def execute_python_file(): 
-    try: # For error catching
-        # Following line tells python to run a shell and execute the command. Command may look like such: `python3 theHarvester/theHarvester.py "USER OPTIONS HERE"`
-        completed_process = subprocess.run(['python3', "theHarvester/theHarvester.py", get_user_options()], capture_output=True, text=True)
-        # If command is successful output should be displayed in the window.
-        if completed_process.returncode == 0:
-            print("Execution successful.")
-            print("Output:")
-            print(completed_process.stdout)
-        # If command fails (it shouldn't) output should be displayed in window as well.
-        else:
-            print(f"Error: Failed to execute theHarvester/theHarvester.py.")
-            print("Error output:")
-            print(completed_process.stderr)
-    # Should never see this error since the location is hard coded.
-    except FileNotFoundError:
-        print(f"Error: The file theHarvester/theHarvester.py does not exist.")
+class HarvesterGUI:
+    def __init__(self):
+        # Define the layout for the GUI
+        self.layout = [
+            [sg.Text("Select Data Source:")],
+            [sg.Radio("Harvester", "source", default=True, key="harvester_source"),
+             sg.Radio("API", "source", key="api_source"),
+             sg.Radio("File", "source", key="file_source"),
+             sg.Input(key="file_path", disabled=True),
+             sg.FileBrowse(file_types=(("Text Files", "*.txt"), ("All Files", "*.*")))],
+            [sg.Text("API Endpoint:", visible=False, key="api_label"), sg.Input(key="api_endpoint", visible=False)],
+            [sg.Button("Begin"), sg.Button("Exit")]
+        ]
 
-# This function will get user input as data source number 1
-def get_user_options():
-    options = "-d google.com"
-    return options
+        # Create the window
+        self.window = sg.Window("Intelligent Application GUI", self.layout, resizable=True)
 
-# Main.
+    def execute_harvester(self):
+        try:
+            # Run the Harvester or your selected data source based on user input
+            if self.window["harvester_source"].get():
+                completed_process = subprocess.run(['python3', "theHarvester/theHarvester.py", "-d google.com"], capture_output=True, text=True)
+                self.display_output(completed_process)
+            elif self.window["api_source"].get():
+                # Implement logic to call your API based on the user input
+                api_endpoint = self.window["api_endpoint"].get()
+                print(f"API call will be implemented for: {api_endpoint}")
+            elif self.window["file_source"].get():
+                file_path = self.window["file_path"].get()
+                # Implement logic to process data from the selected file
+                # Replace the following line with your actual file processing logic
+                print(f"File processing will be implemented for: {file_path}")
+
+        except FileNotFoundError:
+            sg.popup_error("Error: The file theHarvester/theHarvester.py does not exist.")
+
+    def display_output(self, completed_process):
+        # Display the output in a new window
+        sg.popup_scrolled("Execution Output", completed_process.stdout)
+
+    def run(self):
+        # Create an event loop
+        while True:
+            event, values = self.window.read()
+
+            # Perform actions based on user events
+            if event == "Begin":
+                self.execute_harvester()
+            elif event == sg.WIN_CLOSED or event == "Exit":
+                break
+            elif event == "file_source":
+                # Enable/disable file-related fields based on user selection
+                self.window["file_path"].update(disabled=not values["file_source"])
+
+        # Close the window
+        self.window.close()
+
 if __name__ == "__main__":
-    # "layout" defines how the gui will appear. Just add modules to the array.
-    # sg.Text will display text
-    # sg.Button will add a button that can be pressed
-    layout = [  [sg.Text("This is a simple GUI for theHarvester terminal application.")], 
-                [sg.Button("Begin")]   ]
-
-    # Create the window
-    window = sg.Window("theHarvesterGUI", layout, resizable=True)
-
-    # Create an event loop to tell if a button is pressed. If more buttons are added, this can be modified for them.
-    while True:
-        event, values = window.read()
-        if event == "Begin":
-            execute_python_file() 
-
-        # End program if user closes window
-        if event == sg.WIN_CLOSED:
-            break
-
-    window.close()
+    # Create an instance of the HarvesterGUI class and run the GUI
+    gui = HarvesterGUI()
+    gui.run()
