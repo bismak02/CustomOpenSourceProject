@@ -8,6 +8,9 @@ import subprocess
 
 class HarvesterGUI:
     def __init__(self):
+        # Initializes the self.domain variable
+        self.domain = ""
+
         # Define the layout for the GUI
         self.layout = [
             [sg.Text("Select Data Source:")],
@@ -47,7 +50,28 @@ class HarvesterGUI:
         sg.popup_scrolled("Execution Output", completed_process.stdout)
 
     def get_user_options(self):
-        options = "-d google.com"
+        options = "-d "
+        optionsLayout = [
+            [sg.Text("Enter the domain name you would like to search:")],
+            [sg.Input(key="domain")],
+            [sg.Button("Enter")]
+        ]
+
+        window = sg.Window("Harvester Options", optionsLayout, resizable=True)
+
+        event, values = window.read()
+
+        while True:
+            event, values = window.read()
+
+            # Perform actions based on user events
+            if event == "Enter":
+                self.domain = values["domain"]
+                options += self.domain
+            elif event == sg.WIN_CLOSED:
+                break
+    
+        window.close()
         return options
 
     def run(self):
