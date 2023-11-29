@@ -2,6 +2,7 @@
 # harvesterGUI.py
 
 # Import necessary libraries
+# This GUI uses PySimpleGUI as the library for the GUI. Find documentation here: https://www.pysimplegui.org/en/latest/
 import PySimpleGUI as sg
 import subprocess
 
@@ -26,7 +27,7 @@ class HarvesterGUI:
         try:
             # Run the Harvester or your selected data source based on user input
             if self.window["harvester_source"].get():
-                completed_process = subprocess.run(['python3', "theHarvester/theHarvester.py", "-d google.com"], capture_output=True, text=True)
+                completed_process = subprocess.run(['python3', "theHarvester/theHarvester.py", self.get_user_options()], capture_output=True, text=True)
                 self.display_output(completed_process)
             elif self.window["api_source"].get():
                 # Implement logic to call your API based on the user input
@@ -44,6 +45,10 @@ class HarvesterGUI:
     def display_output(self, completed_process):
         # Display the output in a new window
         sg.popup_scrolled("Execution Output", completed_process.stdout)
+
+    def get_user_options(self):
+        options = "-d google.com"
+        return options
 
     def run(self):
         # Create an event loop
