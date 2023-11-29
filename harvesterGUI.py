@@ -31,6 +31,7 @@ class HarvesterGUI:
             # Run the Harvester or your selected data source based on user input
             if self.window["harvester_source"].get():
                 completed_process = subprocess.run(['python3', "theHarvester/theHarvester.py", self.get_user_options()], capture_output=True, text=True)
+                print(completed_process)
                 self.display_output(completed_process)
             elif self.window["api_source"].get():
                 # Implement logic to call your API based on the user input
@@ -49,8 +50,12 @@ class HarvesterGUI:
         # Display the output in a new window
         sg.popup_scrolled("Execution Output", completed_process.stdout)
 
+    # Function will get user output
     def get_user_options(self):
+        # String will be passed thru to command
         options = "-d "
+
+        # Layout for a new window
         optionsLayout = [
             [sg.Text("Enter the domain name you would like to search:")],
             [sg.Input(key="domain")],
@@ -66,8 +71,9 @@ class HarvesterGUI:
 
             # Perform actions based on user events
             if event == "Enter":
-                self.domain = values["domain"]
-                options += self.domain
+                self.domain = values["domain"] # Sets global variable domain with this
+                options += self.domain + " " # Appends domain to options
+                break
             elif event == sg.WIN_CLOSED:
                 break
     
