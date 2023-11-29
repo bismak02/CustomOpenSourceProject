@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# harvesterGUI.py
+
 # Import necessary libraries
 import PySimpleGUI as sg
 import subprocess
