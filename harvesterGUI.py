@@ -6,6 +6,7 @@
 import PySimpleGUI as sg
 import os
 import subprocess
+from datetime import datetime
 
 class HarvesterGUI:
     def __init__(self):
@@ -98,6 +99,8 @@ class HarvesterGUI:
              sg.Radio("virustotal", "search", key="virustotal"),
              sg.Radio("yahoo", "search", key="yahoo")],
             [sg.Radio("zoomeye", "search", key="zoomeye")],
+            [sg.Text("-------------------------------------------------------------------------------")],
+            [sg.Text("Would you like to save this output?"), sg.Radio("Yes", "save", key="y"), sg.Radio("No", "save", key="n", default=True)],
             [sg.Button("Enter")]
         ]
 
@@ -111,6 +114,7 @@ class HarvesterGUI:
             if event == "Enter":
                 self.domain = values["domain"] # Sets global variable domain with this
                 searchChoice = None
+                saveChoice = []
                 # Loop checks for what option the user selected and sets searchChoice equal to the user input.
                 for choice in ["anubis", "baidu", "bevigil", "binaryedge", "bing", "bingapi", 
                                 "bufferoverun", "brave", "censys", "certspotter", "criminalip", "crtsh", 
@@ -121,7 +125,10 @@ class HarvesterGUI:
                                 "tomba", "urlscan", "virustotal", "yahoo", "zoomeye"]:
                     if values[choice]:
                         searchChoice = choice
-                options.extend([self.domain, "-b", searchChoice]) # Appends options
+                for choice in ["y", "n"]:
+                    if values[choice] and choice == "y":
+                        saveChoice = ["-f", "theHarvester_"+datetime.now().strftime("%Y-%m-%d-%H-%M-%S")]
+                options.extend([self.domain, "-b", searchChoice] + saveChoice) # Appends options
                 break
             elif event == sg.WIN_CLOSED:
                 break
