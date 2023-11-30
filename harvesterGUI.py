@@ -4,10 +4,14 @@
 # Import necessary libraries
 # This GUI uses PySimpleGUI as the library for the GUI. Find documentation here: https://www.pysimplegui.org/en/latest/
 import PySimpleGUI as sg
+import os
 import subprocess
 
 class HarvesterGUI:
     def __init__(self):
+        self.dirname = os.path.dirname(__file__)
+        self.harvesterPath = os.path.join(self.dirname, 'theHarvester/theHarvester.py')
+
         # Initializes the self.domain variable
         self.domain = ""
 
@@ -27,24 +31,20 @@ class HarvesterGUI:
         self.window = sg.Window("Intelligent Application GUI", self.layout, resizable=True)
 
     def execute_harvester(self):
-        try:
-            # Run the Harvester or your selected data source based on user input
-            if self.window["harvester_source"].get():
-                completed_process = subprocess.run(['python3', "theHarvester/theHarvester.py", self.get_user_options()], capture_output=True, text=True)
-                print(completed_process)
-                self.display_output(completed_process)
-            elif self.window["api_source"].get():
-                # Implement logic to call your API based on the user input
-                api_endpoint = self.window["api_endpoint"].get()
-                print(f"API call will be implemented for: {api_endpoint}")
-            elif self.window["file_source"].get():
-                file_path = self.window["file_path"].get()
-                # Implement logic to process data from the selected file
-                # Replace the following line with your actual file processing logic
-                print(f"File processing will be implemented for: {file_path}")
-
-        except FileNotFoundError:
-            sg.popup_error("Error: The file theHarvester/theHarvester.py does not exist.")
+        # Run the Harvester or your selected data source based on user input
+        if self.window["harvester_source"].get():
+            command = ['python3', self.harvesterPath] + self.get_user_options()
+            completed_process = subprocess.run(command, capture_output=True, text=True)
+            self.display_output(completed_process)
+        elif self.window["api_source"].get():
+            # Implement logic to call your API based on the user input
+            api_endpoint = self.window["api_endpoint"].get()
+            print(f"API call will be implemented for: {api_endpoint}")
+        elif self.window["file_source"].get():
+            file_path = self.window["file_path"].get()
+            # Implement logic to process data from the selected file
+            # Replace the following line with your actual file processing logic
+            print(f"File processing will be implemented for: {file_path}")
 
     def display_output(self, completed_process):
         # Display the output in a new window
@@ -53,49 +53,49 @@ class HarvesterGUI:
     # Function will get user output
     def get_user_options(self):
         # String will be passed thru to command
-        options = "-d "
+        options = ["-d"]
 
         # Layout for a new window
         optionsLayout = [
             [sg.Text("Enter the domain name you would like to search:")],
             [sg.Input(key="domain")],
-            [sg.Radio("anubis", "search"),
-             sg.Radio("baidu", "search"),
-             sg.Radio("bevigil", "search"),
-             sg.Radio("binaryedge", "search")],
-             [sg.Radio("bing", "search"),
-             sg.Radio("bingapi", "search"),
-             sg.Radio("bufferoverun", "search"),
-             sg.Radio("brave", "search")],
-             [sg.Radio("censys", "search"),
-             sg.Radio("certspotter", "search"),
-             sg.Radio("criminalip", "search"),
-             sg.Radio("crtsh", "search")],
-             [sg.Radio("dnsdumpster", "search"),
-             sg.Radio("duckduckgo", "search"),
-             sg.Radio("fullhunt", "search"),
-             sg.Radio("github-code", "search")],
-             [sg.Radio("hackertarget", "search"),
-             sg.Radio("hunter", "search"),
-             sg.Radio("hunterhow", "search"),
-             sg.Radio("intelx", "search")],
-             [sg.Radio("netlas", "search"),
-             sg.Radio("onyphe", "search"),
-             sg.Radio("otx", "search"),
-             sg.Radio("pentesttools", "search")],
-             [sg.Radio("projectdiscovery", "search"),
-             sg.Radio("rapiddns", "search"),
-             sg.Radio("rocketreach", "search"),
-             sg.Radio("securityTrails", "search")],
-             [sg.Radio("sitedossier", "search"),
-             sg.Radio("subdomaincenter", "search"),
-             sg.Radio("subdomainfinderc99", "search"),
-             sg.Radio("threatminer", "search")],
-             [sg.Radio("tomba", "search"),
-             sg.Radio("urlscan", "search"),
-             sg.Radio("virustotal", "search"),
-             sg.Radio("yahoo", "search")],
-             [sg.Radio("zoomeye", "search")],
+            [sg.Radio("anubis", "search", key="anubis", default=True),
+             sg.Radio("baidu", "search", key="baidu"),
+             sg.Radio("bevigil", "search", key="bevigil")],
+            [sg.Radio("binaryedge", "search", key="binaryedge"),
+             sg.Radio("bing", "search", key="bing"),
+             sg.Radio("bingapi", "search", key="bingapi")],
+            [sg.Radio("bufferoverun", "search", key="bufferoverun"),
+             sg.Radio("brave", "search", key="brave"),
+             sg.Radio("censys", "search", key="censys")],
+            [sg.Radio("certspotter", "search", key="certspotter"),
+             sg.Radio("criminalip", "search", key="criminalip"),
+             sg.Radio("crtsh", "search", key="crtsh")],
+            [sg.Radio("dnsdumpster", "search", key="dnsdumpster"),
+             sg.Radio("duckduckgo", "search", key="duckduckgo"),
+             sg.Radio("fullhunt", "search", key="fullhunt")],
+            [sg.Radio("github-code", "search", key="github-code"),
+             sg.Radio("hackertarget", "search", key="hackertarget"),
+             sg.Radio("hunter", "search", key="hunter")],
+            [sg.Radio("hunterhow", "search", key="hunterhow"),
+             sg.Radio("intelx", "search", key="intelx"),
+             sg.Radio("netlas", "search", key="netlas")],
+            [sg.Radio("onyphe", "search", key="onyphe"),
+             sg.Radio("otx", "search", key="otx"),
+             sg.Radio("pentesttools", "search", key="pentesttools")],
+            [sg.Radio("projectdiscovery", "search", key="projectdiscovery"),
+             sg.Radio("rapiddns", "search", key="rapiddns"),
+             sg.Radio("rocketreach", "search", key="rocketreach")],
+            [sg.Radio("securityTrails", "search", key="securityTrails"),
+             sg.Radio("sitedossier", "search", key="sitedossier"),
+             sg.Radio("subdomaincenter", "search", key="subdomaincenter")],
+            [sg.Radio("subdomainfinderc99", "search", key="subdomainfinderc99"),
+             sg.Radio("threatminer", "search", key="threatminer"),
+             sg.Radio("tomba", "search", key="tomba")],
+            [sg.Radio("urlscan", "search", key="urlscan"),
+             sg.Radio("virustotal", "search", key="virustotal"),
+             sg.Radio("yahoo", "search", key="yahoo")],
+            [sg.Radio("zoomeye", "search", key="zoomeye")],
             [sg.Button("Enter")]
         ]
 
@@ -109,7 +109,17 @@ class HarvesterGUI:
             # Perform actions based on user events
             if event == "Enter":
                 self.domain = values["domain"] # Sets global variable domain with this
-                options += self.domain + " " # Appends domain to options
+                searchChoice = None
+                for choice in ["anubis", "baidu", "bevigil", "binaryedge", "bing", "bingapi", 
+                                "bufferoverun", "brave", "censys", "certspotter", "criminalip", "crtsh", 
+                                "dnsdumpster", "duckduckgo", "fullhunt", "github-code", "hackertarget", 
+                                "hunter", "hunterhow", "intelx", "netlas", "onyphe", "otx", "pentesttools",
+                                "projectdiscovery", "rapiddns", "rocketreach", "securityTrails", 
+                                "sitedossier", "subdomaincenter", "subdomainfinderc99", "threatminer",
+                                "tomba", "urlscan", "virustotal", "yahoo", "zoomeye"]:
+                    if values[choice]:
+                        searchChoice = choice
+                options.extend([self.domain, "-b", searchChoice]) # Appends options
                 break
             elif event == sg.WIN_CLOSED:
                 break
