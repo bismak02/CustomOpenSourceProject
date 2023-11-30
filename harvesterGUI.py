@@ -9,10 +9,11 @@ import subprocess
 
 class HarvesterGUI:
     def __init__(self):
+        # Getting absolute path of the harvester python script to avoid nonsense
         self.dirname = os.path.dirname(__file__)
         self.harvesterPath = os.path.join(self.dirname, 'theHarvester/theHarvester.py')
 
-        # Initializes the self.domain variable
+        # Initializes the self.domain variable for use across the program
         self.domain = ""
 
         # Define the layout for the GUI
@@ -33,10 +34,10 @@ class HarvesterGUI:
     def execute_harvester(self):
         # Run the Harvester or your selected data source based on user input
         if self.window["harvester_source"].get():
-            command = ['python3', self.harvesterPath] + self.get_user_options()
-            sg.popup_non_blocking("Application is running. Please be patient...", keep_on_top=True, auto_close=True)
-            completed_process = subprocess.run(command, capture_output=True, text=True)
-            self.display_output(completed_process)
+            command = ['python3', self.harvesterPath] + self.get_user_options() # Create the command to run
+            sg.popup_non_blocking("Application is running. Please be patient...", keep_on_top=True, auto_close=True) # Create a popup that closes once the following line is done executing
+            completed_process = subprocess.run(command, capture_output=True, text=True) # Runs the command to execute the harvester
+            self.display_output(completed_process) # Creates the output window
         elif self.window["api_source"].get():
             # Implement logic to call your API based on the user input
             api_endpoint = self.window["api_endpoint"].get()
@@ -100,6 +101,7 @@ class HarvesterGUI:
             [sg.Button("Enter")]
         ]
 
+        # Creates option window
         optionsWindow = sg.Window("Harvester Options", optionsLayout, resizable=True)
 
         while True:
@@ -109,6 +111,7 @@ class HarvesterGUI:
             if event == "Enter":
                 self.domain = values["domain"] # Sets global variable domain with this
                 searchChoice = None
+                # Loop checks for what option the user selected and sets searchChoice equal to the user input.
                 for choice in ["anubis", "baidu", "bevigil", "binaryedge", "bing", "bingapi", 
                                 "bufferoverun", "brave", "censys", "certspotter", "criminalip", "crtsh", 
                                 "dnsdumpster", "duckduckgo", "fullhunt", "github-code", "hackertarget", 
