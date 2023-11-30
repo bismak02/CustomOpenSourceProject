@@ -34,6 +34,7 @@ class HarvesterGUI:
         # Run the Harvester or your selected data source based on user input
         if self.window["harvester_source"].get():
             command = ['python3', self.harvesterPath] + self.get_user_options()
+            sg.popup_non_blocking("Application is running. Please be patient...", keep_on_top=True, auto_close=True)
             completed_process = subprocess.run(command, capture_output=True, text=True)
             self.display_output(completed_process)
         elif self.window["api_source"].get():
@@ -99,12 +100,10 @@ class HarvesterGUI:
             [sg.Button("Enter")]
         ]
 
-        window = sg.Window("Harvester Options", optionsLayout, resizable=True)
-
-        event, values = window.read()
+        optionsWindow = sg.Window("Harvester Options", optionsLayout, resizable=True)
 
         while True:
-            event, values = window.read()
+            event, values = optionsWindow.read()
 
             # Perform actions based on user events
             if event == "Enter":
@@ -124,7 +123,7 @@ class HarvesterGUI:
             elif event == sg.WIN_CLOSED:
                 break
     
-        window.close()
+        optionsWindow.close()
         return options
 
     def run(self):
