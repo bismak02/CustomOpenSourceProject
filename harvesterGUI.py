@@ -61,7 +61,7 @@ class HarvesterGUI:
         # Layout for a new window
         optionsLayout = [
             [sg.Text("Enter the domain name you would like to search:")],
-            [sg.Input(key="user_input_source")],
+            [sg.Input(key="user_input_source", default_text=self.domain)],
             [sg.Text("-------------------------------------------------------------------------------")],
             [sg.Text("Choose your search API:")],
             [sg.Radio("anubis", "search", key="anubis", default=True),
