@@ -7,6 +7,7 @@ import PySimpleGUI as sg
 import os
 import subprocess
 from datetime import datetime
+import json
 
 class HarvesterGUI:
     def __init__(self):
@@ -44,9 +45,7 @@ class HarvesterGUI:
             self.domainDB()
         elif self.window["file_source"].get():
             file_path = self.window["file_path"].get()
-            # Implement logic to process data from the selected file
-            # Replace the following line with your actual file processing logic
-            print(f"File processing will be implemented for: {file_path}")
+            self.formatJSON(file_path)
 
     def display_output(self, completed_process):
         # Display the output in a new window
@@ -161,6 +160,16 @@ class HarvesterGUI:
     
         optionsWindow.close()
         return options
+    
+    def formatJSON(self, unformatted_file):
+        with open(unformatted_file, 'r') as file:
+            data = json.load(file)
+
+            formatted_json = json.dumps(data, indent=4, sort_keys=True)
+            with open(unformatted_file, 'w') as file2:
+                file2.write(formatted_json)
+            file2.close()
+        file.close()
 
     def run(self):
         # Create an event loop
