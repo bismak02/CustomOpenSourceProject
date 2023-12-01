@@ -24,7 +24,7 @@ class HarvesterGUI:
              sg.Radio("DomainDB Search", "source", key="api_source"),
              sg.Radio("File", "source", key="file_source"),
              sg.Input(key="file_path", disabled=True),
-             sg.FileBrowse(file_types=(("Text Files", "*.txt"), ("All Files", "*.*")))],
+             sg.FileBrowse(file_types=(("JSON Files", "*.json"),))],
             [sg.Text("API Endpoint:", visible=False, key="api_label"), sg.Input(key="api_endpoint", visible=False)],
             [sg.Button("Begin"), sg.Button("Exit")]
         ]
