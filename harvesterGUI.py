@@ -69,10 +69,11 @@ class HarvesterGUI:
             if event == "Search":
                 self.domain = values["user_input_source"] # Sets global variable domain with this
 
-                command = ["curl", "-X", "GET", "--header", "\'Accept: application/json\'", f"\'https://api.domainsdb.info/v1/domains/search?limit=50&domain={self.domain}\'"] # Create the command to run
+                command = ['curl', '-X', 'GET', '--header', '\'Accept: application/json\'', f'https://api.domainsdb.info/v1/domains/search?limit=50&domain={self.domain}'] # Create the command to run
                 sg.popup_non_blocking("Searching domainDB. Please be patient...", keep_on_top=True, auto_close=True) # Create a popup that closes once the following line is done executing
                 completed_process = subprocess.run(command, capture_output=True, text=True) # Runs the command to execute the harvester
                 self.display_output(completed_process) # Creates the output window
+                break
             elif event == sg.WIN_CLOSED:
                 break
 
