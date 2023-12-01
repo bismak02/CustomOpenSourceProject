@@ -23,10 +23,9 @@ class HarvesterGUI:
             [sg.Text("Select Data Source:")],
             [sg.Radio("Harvester", "source", default=True, key="harvester_source"),
              sg.Radio("DomainDB Search", "source", key="api_source"),
-             sg.Radio("File", "source", key="file_source"),
+             sg.Radio("Analyze JSON File", "source", key="file_source"),
              sg.Input(key="file_path", disabled=True),
              sg.FileBrowse(file_types=(("JSON Files", "*.json"),))],
-            [sg.Text("API Endpoint:", visible=False, key="api_label"), sg.Input(key="api_endpoint", visible=False)],
             [sg.Button("Begin"), sg.Button("Exit")]
         ]
 
@@ -170,6 +169,29 @@ class HarvesterGUI:
                 file2.write(formatted_json)
             file2.close()
         file.close()
+
+        sg.popup_scrolled("Analyzed Output:", self.count_json_pairs(unformatted_file))
+
+    
+    def count_json_pairs(self, file_path):
+        pair_counts = {}
+
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+
+        def count_pairs(obj):
+            if isinstance(obj, dict):
+                for key, value in obj.items():
+                    pair = f"{key}: {json.dumps(value)}"
+                    pair_counts[pair] = pair_counts.get(pair, 0) + 1
+                    count_pairs(value)
+            elif isinstance(obj, list):
+                for item in obj:
+                    count_pairs(item)
+
+        count_pairs(data)
+
+        return pair_counts
 
     def run(self):
         # Create an event loop
