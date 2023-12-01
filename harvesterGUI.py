@@ -41,8 +41,9 @@ class HarvesterGUI:
             self.display_output(completed_process) # Creates the output window
         elif self.window["api_source"].get():
             # Implement logic to call your API based on the user input
-            api_endpoint = self.window["api_endpoint"].get()
-            print(f"API call will be implemented for: {api_endpoint}")
+            self.domainDB()
+            ####api_endpoint = self.window["api_endpoint"].get()
+            ####print(f"API call will be implemented for: {api_endpoint}")
         elif self.window["file_source"].get():
             file_path = self.window["file_path"].get()
             # Implement logic to process data from the selected file
@@ -52,6 +53,30 @@ class HarvesterGUI:
     def display_output(self, completed_process):
         # Display the output in a new window
         sg.popup_scrolled("Execution Output", completed_process.stdout)
+
+    def domainDB(self):
+        domainDBLayout = [
+            [sg.Text("Enter the name of the domain you would like to search domainDB for:")],
+            [sg.Input(key="user_input_source", default_text=self.domain)],
+            [sg.Button("Search")]
+        ]
+
+        domainDBWindow = sg.Window("domainDB Search", domainDBLayout, resizable=True)
+
+        while True:
+            event, values = domainDBWindow.read()
+            
+            if event == "Search":
+                self.domain = values["user_input_source"] # Sets global variable domain with this
+
+                command = ["curl", "-X", "GET", "--header", "\'Accept: application/json\'", f"\'https://api.domainsdb.info/v1/domains/search?limit=50&domain={self.domain}\'"] # Create the command to run
+                sg.popup_non_blocking("Searching domainDB. Please be patient...", keep_on_top=True, auto_close=True) # Create a popup that closes once the following line is done executing
+                completed_process = subprocess.run(command, capture_output=True, text=True) # Runs the command to execute the harvester
+                self.display_output(completed_process) # Creates the output window
+            elif event == sg.WIN_CLOSED:
+                break
+
+        domainDBWindow.close()
 
     # Function will get user output
     def get_user_options(self):
