@@ -21,7 +21,7 @@ class HarvesterGUI:
         self.layout = [
             [sg.Text("Select Data Source:")],
             [sg.Radio("Harvester", "source", default=True, key="harvester_source"),
-             sg.Radio("API", "source", key="api_source"),
+             sg.Radio("DomainDB Search", "source", key="api_source"),
              sg.Radio("File", "source", key="file_source"),
              sg.Input(key="file_path", disabled=True),
              sg.FileBrowse(file_types=(("Text Files", "*.txt"), ("All Files", "*.*")))],
@@ -61,7 +61,7 @@ class HarvesterGUI:
         # Layout for a new window
         optionsLayout = [
             [sg.Text("Enter the domain name you would like to search:")],
-            [sg.Input(key="domain")],
+            [sg.Input(key="user_input_source")],
             [sg.Text("-------------------------------------------------------------------------------")],
             [sg.Text("Choose your search API:")],
             [sg.Radio("anubis", "search", key="anubis", default=True),
@@ -114,7 +114,7 @@ class HarvesterGUI:
 
             # Perform actions based on user events
             if event == "Enter":
-                self.domain = values["domain"] # Sets global variable domain with this
+                self.domain = values["user_input_source"] # Sets global variable domain with this
                 searchChoice = None
                 saveChoice = []
                 # Loop checks for what option the user selected and sets searchChoice equal to the user input.
