@@ -62,6 +62,8 @@ class HarvesterGUI:
         optionsLayout = [
             [sg.Text("Enter the domain name you would like to search:")],
             [sg.Input(key="domain")],
+            [sg.Text("-------------------------------------------------------------------------------")],
+            [sg.Text("Choose your search API:")],
             [sg.Radio("anubis", "search", key="anubis", default=True),
              sg.Radio("baidu", "search", key="baidu"),
              sg.Radio("bevigil", "search", key="bevigil")],
